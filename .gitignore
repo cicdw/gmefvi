@@ -1,0 +1,8 @@
+# tex noise
+*.aux
+*.log
+*.out
+*.synctex.gz
+
+# vim noise
+*.swp
