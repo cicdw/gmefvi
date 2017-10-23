@@ -1,0 +1,11 @@
+\subsection{Sum Product Algorithm}
+
+For the sake of exposition, suppose we have an undirected graphical model which is a tree and that we want to compute the marginal distribution $p(x)$ for some variable $x$.  % means we have functions on every edge and on every node?  does it necessarily mean that?
+The crux of the sum-product algorithm is that conditioning on a single parent $y\in\pi(x)$ splits the graph into two conditionally independent pieces: the tree in which $y$ participates, and the tree in which $x$ participates.  To compute the marginal for $x$, the only information we actually need from $y$ is the function $y \rightarrow \sum_{z \in T_y} p(z | y)$.  To see this, use the conditional independence to write:
+$$
+p(x, ...) \sim p(y) \cdot p(T_y|y)p(T_x|y)
+$$
+and thus
+$$
+\sum p(x, ...) \sim \sum_y\left(\sum_{z \in T_y} p( z | y)\right) p(T_x|y)p(y)
+$$
