@@ -1,11 +1,53 @@
 \subsection{Sum Product Algorithm}
 
-For the sake of exposition, suppose we have an undirected graphical model which is a tree and that we want to compute the marginal distribution $p(x)$ for some variable $x$.  % means we have functions on every edge and on every node?  does it necessarily mean that?
-The crux of the sum-product algorithm is that conditioning on a single parent $y\in\pi(x)$ splits the graph into two conditionally independent pieces: the tree in which $y$ participates, and the tree in which $x$ participates.  To compute the marginal for $x$, the only information we actually need from $y$ is the function $y \rightarrow \sum_{z \in T_y} p(z | y)$.  To see this, use the conditional independence to write:
+Suppose we have a graphical model which is a connected undirected tree; in that case we can choose an arbitrary ordering for the nodes and write:
 $$
-p(x, ...) \sim p(y) \cdot p(T_y|y)p(T_x|y)
+p(x_1, x_2, .., x_n) = \prod_i \psi_i(x_i) \prod_{i, j \in E} \psi_{i,j}(x_i, x_j)
 $$
-and thus
+
+Suspend disbelief about probabilistic interpretations for a moment and suppose we simply want to compute the quantity
 $$
-\sum p(x, ...) \sim \sum_y\left(\sum_{z \in T_y} p( z | y)\right) p(T_x|y)p(y)
+p(x_s) := \sum_{i \neq s} p(x_1, x_2, ..,x_s,... x_n)
 $$
+where we interpret the sum as being over the \emph{state space} of the corresponding variables.  We can write
+\begin{equation*}
+\begin{aligned}
+p(x_s) &= \psi_s(x_s) \prod_{i\neq s} \psi_i(x_i) \prod_{i, j \in E} \psi_{i,j}(x_i, x_j)\\
+&= \psi_s(x_s) \prod_{i \in \mathcal{N}(s)} \psi_i(x_i) \psi_{i,s}(x_i, x_s) \omega(T_i)
+\end{aligned}
+\end{equation*}
+where $\mathcal{N}(s)$ denotes the set of \emph{neighbors} of node $s$ and $\omega(T_i)$ is a \emph{weighting} of the subtree containing node $i$ formed by removing node $s$; this weighting is a function of all variables in $T_i$.  Let us focus our attention on a single $i\in\mathcal{N}(s)$ for a moment, and imagine marginalizing out only the nodes in $T_i$ first:
+\begin{equation*}
+\begin{aligned}
+\sum_{j\in T_i}\psi_s(x_s) \prod_{k \in \mathcal{N}(s)} \psi_k(x_k) \psi_{k,s}(x_k, x_s) \omega(T_k) &= \kappa(x_s, x_{V\setminus T_i}) \sum_{j\in T_i} \psi_k(x_i) \psi_{i,s}(x_i, x_s) \omega(T_i)\\
+\end{aligned}
+\end{equation*}
+We should now see that in order to complete this computation, the weighting need only be given to us as a function of $x_i$ alone.  I.e., we can write
+$$
+\kappa(x_s, x_{V\setminus T_i}) \sum_{x_i} \psi_i(x_i) \psi_{i,s}(x_i, x_s) \omega(x_i)
+$$
+where $\omega(x_i)$ is given by
+$$
+\omega(x_i) := \sum_{T_i \setminus i}\prod_{k \in \mathcal{N}(i)\setminus {s}} \psi_k(x_k) \psi_{k,s}(x_k, x_i) \omega(T_k)
+$$
+and now we begin to see the recursive nature of our task.  We can then proceed to marginalize out the variables in each of the other subtrees resulting in an expression of the form
+$$
+\psi_s(x_s)\prod_{i\in\mathcal{N}(s)}\left( \sum_{x_i} \psi_i(x_i) \psi_{i,s}(x_i, x_s) \omega(x_i)\right)
+$$
+
+Consequently, to compute the marginal $p(x_s)$, each neighbor $i$ of $s$ needs to pass a ``message" to node $s$ which is a function purely of $x_s$, specifying the "weighting" of the subtree $T_i$ \emph{conditional on} the value $x_s$:
+$$
+\mu_{i\rightarrow s}(x_s) := \sum_{x_i} \psi_i(x_i) \psi_{i,s}(x_i, x_s) \prod_{k \in \mathcal{N}(i) \setminus s} \mu_{k\rightarrow i}(x_i)
+$$
+
+Note that the messages $\mu$ are proxies for the ``true" weightings $\omega$ and that whenever $\mu \equiv \omega$ we have a fixed point and can compute 
+$$
+p(x_s) = \psi_s(x_s) \prod_{i\in\mathcal{N}(s)} \mu_{i\rightarrow s}(x_s).
+$$
+
+This distinction is particularly important in the case when we want to apply this algorithm to graphs with cycles; otherwise we can iteratively updating the messages by beginning at the leaves  with
+$$
+\mu_{\ell\rightarrow q}(x_q) = \sum_{x_\ell} \psi_\ell(x_\ell) \psi_{\ell,q}(x_\ell, x_q)
+$$
+
+\subsubsection{An Example}
