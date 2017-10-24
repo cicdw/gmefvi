@@ -50,4 +50,32 @@ $$
 \mu_{\ell\rightarrow q}(x_q) = \sum_{x_\ell} \psi_\ell(x_\ell) \psi_{\ell,q}(x_\ell, x_q)
 $$
 
-\subsubsection{An Example}
+\subsubsection{An Example: Independent Sets on Graphs}
+
+An \emph{independent set} of vertices on a graph is a subset of vertices such that no two are adjacent.  This example will be particularly fruitful in future discussions; consider a binary tree whose nodes are assigned weights.  We imagine this as an undirected graphical model by putting a binary random variable at each node, with potential functions given by:
+\begin{equation*}
+\begin{aligned}
+\psi_i(x_i) &:= \exp(w_i x_i)\\
+\psi_{ij}(x_i, x_j) &:= \chi(x_i + x_j <= 1)\\
+\end{aligned}
+\end{equation*}
+Here $\chi(\cdot)$ is the indicator function for whether the condition holds.  Let us see what the sum-product algorithm looks like for this model; first imagine a parent of two leaf nodes.  Applying the above formulas, each leaf (here denoted $\ell$ and $r$) sends the message
+\begin{equation*}
+\begin{aligned}
+\mu_{\ell \rightarrow p}(x_p) &= \exp(w_\ell)\chi(x_p = 0) + 1\\
+\mu_{r \rightarrow p}(x_p) &= \exp(w_r)\chi(x_p = 0) + 1\\
+\end{aligned}
+\end{equation*}
+and consequently the message the $x_p$ sends to its parent $x_P$ is given by
+\begin{equation*}
+\begin{aligned}
+\mu_{p \rightarrow P}(x_P) &= \sum_{x_p}\left(\exp(w_\ell)\chi(x_p = 0) + 1\right)\left(\exp(w_r)\chi(x_p = 0) + 1\right)\exp(w_px_p)\chi(x_p + x_P <= 1)\\
+&= \left(\exp(w_\ell)+ 1\right)\left(\exp(w_r) + 1\right) + \exp(w_p)\chi(x_P = 0)
+\end{aligned}
+\end{equation*}
+
+If we pause here and suppose $x_p$ is the only node connected to $x_P$, we see that the marginal for $x_P$ would be proportional to
+$$
+\exp(w_P x_P)\cdot\left[\left(\exp(w_\ell)+ 1\right)\left(\exp(w_r) + 1\right) + \exp(w_p)\chi(x_P = 0)\right]
+$$
+which roughly says that $p(x_P = 1) \approx \exp(w_P + w_\ell + w_r)$ while $p(x_P = 0) \approx \exp(w_\ell + w_r) + \exp(w_p)$.  This matches our intuition that choosing $x_P$ in our independent set forces $x_p = 0$ but \emph{not} choosing $x_P$ allows for either $x_p$ to be chosen or both $x_\ell$ and $x_r$.
