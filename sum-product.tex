@@ -78,4 +78,4 @@ If we pause here and suppose $x_p$ is the only node connected to $x_P$, we see t
 $$
 \exp(w_P x_P)\cdot\left[\left(\exp(w_\ell)+ 1\right)\left(\exp(w_r) + 1\right) + \exp(w_p)\chi(x_P = 0)\right]
 $$
-which roughly says that $p(x_P = 1) \approx \exp(w_P + w_\ell + w_r)$ while $p(x_P = 0) \approx \exp(w_\ell + w_r) + \exp(w_p)$.  This matches our intuition that choosing $x_P$ in our independent set forces $x_p = 0$ but \emph{not} choosing $x_P$ allows for either $x_p$ to be chosen or both $x_\ell$ and $x_r$.
+Observe that each term of this summation corresponds to an allowable configuration for an independent set.  For example, when $x_P = 1$ the leading term $\exp(w_P + w_\ell + w_r)$ corresponds to the independent set $\{P, \ell, r\}$.  $\exp(w_\ell)$ occurs in precisely 2 terms because regardless of whether $P$ is chosen, $\ell$ can be chosen in two possible independent sets.  Lastly we note that the constant term corresponds to the null set.
