@@ -1,0 +1,37 @@
+\subsection{Exponential Families as Max Entropy Distributions}
+
+Suppose we are given a collection of \emph{sufficient statistics} or \emph{potentials} $\phi_\alpha: \mathcal{X} \rightarrow \mathbb{R}$ and a collection of \emph{mean parameters} for each statistic, $\mu_\alpha$.  There are possibly multiple probability distributions over $\mathcal{X}$ satisfying
+$$
+\mathbb{E}[\phi_\alpha(X)] = \mu_\alpha \ \ \ \ \forall \alpha\in\mathcal{I}
+$$
+or there are none.  For example, if $\phi_1(X) = X$ and $\phi_2(X) = X^2$ then by Jensen's inequality we must have
+$$
+\mu_2 \geq \mu_1 ^2.
+$$
+Thus not every combination of $\mu$ and $\phi$ will admit an admissible $p$.
+
+Supposing there exists at least one distribution with mean parameters $\{\mu_\alpha\}_{\alpha\in\mathcal{I}}$, it is natural to ask for the distribution with the \emph{maximal} amount of uncertainty satisfying the above mean parameter constraint (we want to encode the least amount of additional information above and beyond the constraints).  Using \emph{Shannon entropy} as our measure of "uncertainty" we are led to the optimization problem:
+$$
+p^* := \arg\max_{p} -\mathbb{E}_p[\log(p)] \ \ \ \ \ \text{s.t.}\ \ \ \  \mathbb{E}[\phi_\alpha(X)] = \mu_\alpha \ \ \ \ \forall \alpha\in\mathcal{I}
+$$
+\subsubsection{Discrete Case}
+First suppose that $\mathcal{X}$ is discrete.  In this case $p$ is simply a non-negative vector which sums to 1 and we form the Lagrangian
+$$
+\mathcal{L}(p, \lambda, \tau) := - \sum_{i=1}^n\log(p_i)p_i + \sum_{\alpha\in\mathcal{I}} \lambda_\alpha \left(\mathbb{E}[\phi_\alpha(X)] - \mu_\alpha\right) + \tau (\sum_{i=1}^n p_i - 1).
+$$
+We have the necessary stationarity conditions
+$$
+\frac{\partial \mathcal{L}}{\partial p_i} = -\log(p_i) - 1 + \sum_{\alpha\in\mathcal{I}} \lambda_\alpha\phi_\alpha(X_i) + \tau= 0
+$$
+which implies that $p^*$ is of the form
+$$
+p^* = \exp\left(\sum_{\alpha\in\mathcal{I}} \lambda_\alpha\phi_\alpha + \tau - 1\right),
+$$
+i.e., it is in the exponential family with \emph{canonical} or \emph{exponential} parameters $\lambda_\alpha$ and $\tau$ enforces the appropriate normalization.
+
+
+\subsubsection{Continuous Case}
+
+Something more subtle happens in the continuous case; for example, with $\phi_1$ and $\phi_2$ as above, if $\mu_1 = 1$ and $\mu_2 =1$, the distribution is a degenerate delta.
+
+\subsection{Example: Gaussian}
