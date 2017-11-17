@@ -1,0 +1,52 @@
+Recall that in our context, an undirected graphical model is specified by a graph $G = (V, E)$ and potential functions $\{\psi_C\}_{C \in \mathcal{C}}$, where $\mathcal{C}$ is (a subset of) the set of cliques of $G$. 
+
+\begin{equation} \label{eq:gibbsfield}
+p(x_1, \ldots, x_n) = \frac{1}{Z} \prod_{C_i \in \mathcal{C}} \psi_C(x_C)
+\end{equation}
+Distributions that satisfy this factorization property are also called ``Gibbs random fields''. 
+
+What's the motivation behind this specific factorization property? Why are these distributions our primary object of study?
+
+The Hammersley-Clifford theorem shows that this factorization property is equivalent to  ``Markov properties'', which express conditional independence relationships between the random variables $X_v$ in terms of the topology of $G$.
+
+
+\begin{definition} \label{def:props} (Markov propertes) Let $\{X_v\}_{x \in V}$ be a set of random variables indexed by the vertices of a graph $G = (V, E)$. If $A = \{a_i\}_i$ is an (ordered) subset of $V$, we informally let $X_A$ denote the random vector $(X_{a_i})_i$. Finally, recall that we say two random variables/vectors $X, Y$ are conditionally independed given a third, $Z$, if the joint conditional probability with respect $Z$ factors:
+
+  $$P(X,Y|Z) = P(X|Z)P(Y|Z)$$
+  
+We define 
+  \begin{enumerate}
+
+  \item  \textbf{the local Markov property}: for all $v \in V$, $X_v$ and $X_{V \setminus (N(v) \cup \{v\})}$ are conditionally independent given $X_{N(v)}$, where $N(v)$ is the set of vertices adjacent to (but not equal to) $v$.
+    
+  \item \textbf{the global Markov property}: if $A, B$ are subsets of $V$ and $S \subset V$ separates $A$ and $B$ (i.e. every path from a point $A$ to a point in $B$ passes through $S$) then $X_A$ and $X_B$ are conditionally independent given $X_S$. 
+  \end{enumerate}
+\end{definition} \label{def:markovprop}
+It's clear that the global Markov property is stronger than the local Markov property. In general they are not equivalent (\textit{don't have an example here}).
+
+\begin{theorem} \label{thm:hamcliff} Suppose that the joint density $p(x_1,\ldots,x_n)$ of the $\{X_v\}$ is strictly positive.
+  
+  \begin{enumerate}
+
+  \item If the $X_v$ form a Gibbs field (i.e., there is a factorization of the form \eqref{eq:gibbsfield}), then the local Markov property is satisfied.
+    
+  \item On the other hand, if the local Markov property is satisfied, then the $X_v$ form a Gibbs field.
+  \end{enumerate}
+  
+\end{theorem}
+
+\begin{proof}
+  (of Gibbs Field $\Rightarrow$ local Markov property, the ``easy'' implication). Fix a vertex $v$, and let $U = V \setminus (v \cup N(v))$.  We want to show that
+  $$P(X_v, X_U | X_{N(v)}) = P(X_v | X_{N(v)})P(X_U | X_{N(v)})$$
+
+  The basic idea is that since cliques are fully connected, no clique can contain both $v$ and an element of $U$. Since $p$ factors along cliques according to \eqref{eq:gibbsfield}, we can ``pull apart'' factors belonging to $X_v$ and $X_U$ in the expression for $P(X_v, X_U | X_{N(v)})$.
+\end{proof}
+
+\begin{remark} A Gibbs field with positive density actually satisfies the stronger global Markov property of definition \ref{def:markovprop}. 
+\end{remark}
+
+\begin{remark} How restrictive is the positivity condition of Theorem \ref{thm:hamcliff}? Can we not just restrict $p$ to a domain on which it is positive?
+\end{remark}  
+
+
+
