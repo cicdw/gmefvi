@@ -19,7 +19,9 @@ p(x_1, x_2, ..,x_s,... x_n) &= \psi_s(x_s) \prod_{i\neq s} \psi_i(x_i) \prod_{i,
 where $\mathcal{N}(s)$ denotes the set of \emph{neighbors} of node $s$ and $\omega(T_i)$ is a \emph{weighting} of the subtree containing node $i$ formed by removing node $s$; this weighting is a function of all variables in $T_i$.  Let us focus our attention on a single $i\in\mathcal{N}(s)$ for a moment, and imagine marginalizing out only the nodes in $T_i$ first:
 \begin{equation*}
 \begin{aligned}
-\sum_{j\in T_i}\psi_s(x_s) \prod_{k \in \mathcal{N}(s)} \psi_k(x_k) \psi_{k,s}(x_k, x_s) \omega(T_k) &= \kappa(x_s, x_{V\setminus T_i}) \sum_{j\in T_i} \psi_k(x_i) \psi_{i,s}(x_i, x_s) \omega(T_i)\\
+\sum_{T_i} p(x_1, x_2, ..,x_s,... x_n) &= \sum_{T_i}\psi_s(x_s) \prod_{k \in \mathcal{N}(s)} \psi_k(x_k) \psi_{k,s}(x_k, x_s) \omega(T_k) \\
+&= \kappa(x_s, x_{V\setminus T_i}) \sum_{T_i} \psi_i(x_i) \psi_{i,s}(x_i, x_s) \omega(T_i)\\
+&= \kappa(x_s, x_{V\setminus T_i}) \sum_{x_i} \psi_i(x_i) \psi_{i,s}(x_i, x_s) \sum_{T_i \setminus x_i} \omega(x_i, T_i)\\
 \end{aligned}
 \end{equation*}
 We should now see that in order to complete this computation, the weighting need only be given to us as a function of $x_i$ alone.  I.e., we can write
@@ -28,14 +30,14 @@ $$
 $$
 where $\omega(x_i)$ is given by
 $$
-\omega(x_i) := \sum_{T_i \setminus i}\prod_{k \in \mathcal{N}(i)\setminus {s}} \psi_k(x_k) \psi_{k,s}(x_k, x_i) \omega(T_k)
+\omega(x_i) := \sum_{T_i \setminus i}\prod_{k \in \mathcal{N}(i)\setminus {s}} \psi_k(x_k) \psi_{k,i}(x_k, x_i) \omega(T_k)
 $$
 and now we begin to see the recursive nature of our task.  We can then proceed to marginalize out the variables in each of the other subtrees resulting in an expression of the form
 $$
 \psi_s(x_s)\prod_{i\in\mathcal{N}(s)}\left( \sum_{x_i} \psi_i(x_i) \psi_{i,s}(x_i, x_s) \omega(x_i)\right)
 $$
 
-Consequently, to compute the marginal $p(x_s)$, each neighbor $i$ of $s$ needs to pass a ``message" to node $s$ which is a function purely of $x_s$, specifying the "weighting" of the subtree $T_i$ \emph{conditional on} the value $x_s$:
+Consequently, to compute the marginal $p(x_s)$, each neighbor $i$ of $s$ needs to pass a ``message" to node $s$ which is a function purely of $x_s$, specifying the ``weighting" of the subtree $T_i$ \emph{conditional on} the value $x_s$:
 $$
 \mu_{i\rightarrow s}(x_s) := \sum_{x_i} \psi_i(x_i) \psi_{i,s}(x_i, x_s) \prod_{k \in \mathcal{N}(i) \setminus s} \mu_{k\rightarrow i}(x_i)
 $$
