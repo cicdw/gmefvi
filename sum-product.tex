@@ -47,10 +47,28 @@ $$
 p(x_s) = \psi_s(x_s) \prod_{i\in\mathcal{N}(s)} \mu_{i\rightarrow s}(x_s).
 $$
 
-This distinction is particularly important in the case when we want to apply this algorithm to graphs with cycles; otherwise we can iteratively updating the messages by beginning at the leaves  with
+This distinction is particularly important in the case when we want to apply this algorithm to graphs with cycles; otherwise we can iteratively update the messages by beginning at the leaves with the messages
 $$
 \mu_{\ell\rightarrow q}(x_q) = \sum_{x_\ell} \psi_\ell(x_\ell) \psi_{\ell,q}(x_\ell, x_q)
 $$
+
+\subsubsection{Sum Product Algorithm on Factor Graphs}
+
+For the general case in which potential functions are defined on more than just nodes and edges, it is convenient to think in terms of \emph{factor graphs}.  In this case, messages take the form
+\begin{equation*}
+\begin{aligned}
+\mu_{\psi_\alpha\rightarrow s}(x_s) &:= \sum_{x_M} \psi_\alpha(x_s, x_M) \prod_{m \in M} \mu_{m\rightarrow \psi_\alpha}(x_m)\\
+\mu_{s\rightarrow \psi_\alpha}(x_s) &:= \prod_{\psi \in \mathcal{N}(x_s) \setminus \psi_\alpha} \mu_{\psi \rightarrow s}(x_s).
+\end{aligned}
+\end{equation*}
+Note that we recover the above messages by observing that 
+\begin{equation*}
+\begin{aligned}
+\mu_{\psi_{i, s}\rightarrow x_s}(x_s) &= \sum_{x_i} \psi_{i, s}(x_i, x_s) \mu_{i\rightarrow\psi_{i, s}}(x_i)\\
+&=\sum_{x_i} \psi_{i, s}(x_i, x_s) \psi_{i}(x_i) \prod_{k \in \mathcal{N}(i) \setminus s} \mu_{\psi_{i, k}\rightarrow i}(x_i)\\
+\end{aligned}
+\end{equation*}
+and then changing subscript notation.
 
 \subsubsection{An Example: Independent Sets on Graphs}
 

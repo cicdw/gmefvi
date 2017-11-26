@@ -1,37 +1,48 @@
 \subsection{Exponential Families as Max Entropy Distributions}
 
-Suppose we are given a collection of \emph{sufficient statistics} or \emph{potentials} $\phi_\alpha: \mathcal{X} \rightarrow \mathbb{R}$ and a collection of \emph{mean parameters} for each statistic, $\mu_\alpha$.  There are possibly multiple probability distributions over $\mathcal{X}$ satisfying
+Suppose we are given a collection of \emph{sufficient statistics} or \emph{potentials} $\phi_\alpha: \mathcal{X} \rightarrow \mathbb{R}$ and a collection of \emph{mean parameters} for each statistic, $\mu_\alpha$.  There are possibly multiple probability distributions $p$ over $\mathcal{X}$ satisfying
 $$
-\mathbb{E}[\phi_\alpha(X)] = \mu_\alpha \ \ \ \ \forall \alpha\in\mathcal{I}
+\mathbb{E}_p[\phi_\alpha(X)] = \mu_\alpha \ \ \ \ \forall \alpha\in\mathcal{I}
 $$
 or there are none.  For example, if $\phi_1(X) = X$ and $\phi_2(X) = X^2$ then by Jensen's inequality we must have
 $$
 \mu_2 \geq \mu_1 ^2.
 $$
-Thus not every combination of $\mu$ and $\phi$ will admit an admissible $p$.
+Thus not every combination of $\mu$ and $\phi$ will admit an admissible $p$.  Moreover, if we assume $p$ is \emph{absolutely continuous} with respect to some base measure over $\mathcal{X}$, then this further restricts our admissible $p$.  Continuing with the above example, if $\mu_1^2 = \mu_2$ and $\mathcal{X} = \mathbb{R}$ with Lebesgue measure then we have
+$$
+\int x^2 dp(x) = \left(\int x dp(x)\right)^2
+$$
+which implies the random variable $X$ is constant almost surely\footnote{For strictly convex functions $\phi$, we have that $\phi(x) \geq \phi(y) + \phi'(y)(x -y)$ with equality if and only if $y=x$.  Using $y=\mathbb{E}[X]$ and integrating both sides yields the claim.}, i.e. $p$ is a dirac delta function which is \emph{not} absolutely continuous with respect to Lebesgue measure.
 
-Supposing there exists at least one distribution with mean parameters $\{\mu_\alpha\}_{\alpha\in\mathcal{I}}$, it is natural to ask for the distribution with the \emph{maximal} amount of uncertainty satisfying the above mean parameter constraint (we want to encode the least amount of additional information above and beyond the constraints).  Using \emph{Shannon entropy} as our measure of "uncertainty" we are led to the optimization problem:
+Supposing there exists at least one such distribution with mean parameters $\{\mu_\alpha\}_{\alpha\in\mathcal{I}}$, it is natural to ask for the distribution with the \emph{maximal} amount of uncertainty satisfying the above mean parameter constraint (we want to encode the least amount of additional information above and beyond the constraints).  Using \emph{Shannon entropy} as our measure of ``uncertainty" we are led to the optimization problem:
 $$
 p^* := \arg\max_{p} -\mathbb{E}_p[\log(p)] \ \ \ \ \ \text{s.t.}\ \ \ \  \mathbb{E}[\phi_\alpha(X)] = \mu_\alpha \ \ \ \ \forall \alpha\in\mathcal{I}
 $$
 \subsubsection{Discrete Case}
-First suppose that $\mathcal{X}$ is discrete.  In this case $p$ is simply a non-negative vector which sums to 1 and we form the Lagrangian
+First suppose that $\mathcal{X}$ is finite and discrete.  In this case $p$ is simply a non-negative vector which sums to 1 and we form the Lagrangian
 $$
-\mathcal{L}(p, \lambda, \tau) := - \sum_{i=1}^n\log(p_i)p_i + \sum_{\alpha\in\mathcal{I}} \lambda_\alpha \left(\mathbb{E}[\phi_\alpha(X)] - \mu_\alpha\right) + \tau (\sum_{i=1}^n p_i - 1).
+\mathcal{L}(p, \lambda, \tau) := - \sum_{i=1}^n\log(p_i)p_i + \sum_{\alpha\in\mathcal{I}} \lambda_\alpha \left(\mathbb{E}[\phi_\alpha(X)] - \mu_\alpha\right) + \tau (\sum_{i=1}^n p_i - 1) + \sum_{i=1}^n\gamma_i p_i.
 $$
 We have the necessary stationarity conditions
 $$
-\frac{\partial \mathcal{L}}{\partial p_i} = -\log(p_i) - 1 + \sum_{\alpha\in\mathcal{I}} \lambda_\alpha\phi_\alpha(X_i) + \tau= 0
+\frac{\partial \mathcal{L}}{\partial p_i} = -\log(p_i) - 1 + \sum_{\alpha\in\mathcal{I}} \lambda_\alpha\phi_\alpha(X_i) + \tau + \gamma_i= 0
 $$
 which implies that $p^*$ is of the form
 $$
-p^* = \exp\left(\sum_{\alpha\in\mathcal{I}} \lambda_\alpha\phi_\alpha + \tau - 1\right),
+p^* = \exp\left(\sum_{\alpha\in\mathcal{I}} \lambda_\alpha\phi_\alpha + \tau + \sum_{i=1}^n\gamma_i\chi_i - 1\right) > 0,
 $$
-i.e., it is in the exponential family with \emph{canonical} or \emph{exponential} parameters $\lambda_\alpha$ and $\tau$ enforces the appropriate normalization.
+i.e., it is in the exponential family with \emph{canonical} or \emph{exponential} parameters $\lambda_\alpha$ and $\tau$ is chosen to enforce the appropriate normalization.  Additionally, note that because $p^* > 0$ we must have that $\gamma_i = 0$ for all $i$ by complementary slackness.
 
 
 \subsubsection{Continuous Case}
 
-Something more subtle happens in the continuous case; for example, with $\phi_1$ and $\phi_2$ as above, if $\mu_1 = 1$ and $\mu_2 =1$, the distribution is a degenerate delta.
-
-\subsection{Example: Gaussian}
+The continuous case is more subtle; for example, with $\phi_1$ and $\phi_2$ as above, if $\mu_2 = \mu_1^2$, there does not exist a feasible density.  Instead, we will prove a weaker claim: if there exists a feasible density of the form $p^*(x) = \exp\left(\theta^T\phi - A(\theta)\right)$ then it is necessarily the unique maximizer.  Let $p(x)$ be any other feasible density.  Then we have
+\begin{equation*}
+\begin{aligned}
+-\int p \log p\ dx &= -\int p \log \frac{p}{p^*}\ dx - \int p \log p^*\ dx \\
+&= -\int p \log \frac{p}{p^*}\ dx - \int p\left(\theta^T\phi - A(\theta)\right) \ dx \\
+&= -\int p \log \frac{p}{p^*}\ dx - \theta^T\vec{\alpha} + A(\theta) \\
+&= -\int p \log \frac{p}{p^*}\ dx - \int p^* \log p^*\ dx \\
+\end{aligned}
+\end{equation*}
+and as $-\int p \log \frac{p}{p^*}\ dx < 0$ for any $p \neq p^*$ the claim is proven.
