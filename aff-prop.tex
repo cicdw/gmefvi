@@ -1,0 +1,29 @@
+\subsection{Max Product Algorithm}
+
+Observe that our sum-product derivation carries over to computing maximums, because the only property we relied upon was the distributive property of multiplication and addition, which also holds for multiplication and taking maxima.  Consequently, we can compute max-marginals for our distribution by using the message passing scheme
+\begin{equation*}
+\begin{aligned}
+\mu_{\psi_\alpha\rightarrow s}(x_s) &:= \max_{x_M} \psi_\alpha(x_s, x_M) \prod_{m \in M} \mu_{m\rightarrow \psi_\alpha}(x_m)\\
+\mu_{s\rightarrow \psi_\alpha}(x_s) &:= \prod_{\psi \in \mathcal{N}(x_s) \setminus \psi_\alpha} \mu_{\psi \rightarrow s}(x_s).
+\end{aligned}
+\end{equation*}
+
+Moreover, note that if we restrict ourselves to models in which all variables are binary, it suffices to only track the message differences $m(1) - m(0)$.
+
+%\subsubsection{Extended Example: Affinity Propagation}
+%
+%Consider the non-convex optimization problem
+%\begin{equation*}
+%\begin{aligned}
+%\max_{x_i} \sum_{i \neq j} s_{ij}x_{ij} + \lambda \sum_j x_{jj} \\
+%\text{subject to} \ \ \ \sum_{j} x_{ij} = 1 \\
+%x_{ij} \leq x_{jj} \\
+%x_{ij} \in \{0, 1\}
+%\end{aligned}
+%\end{equation*}
+%
+%If we imagine $s_{ij}$ as a similarity measure between two data points $i$ and $j$, then this problem can be thought of as a clustering problem in which every cluster contains a representative data point (those points for which $x_{jj} = 1$).  We can apply the max-product message passing equations to solve this by first rewriting the problem as
+%$$
+%\max_{x_i} \sum_{i \neq j} s_{ij}x_{ij} + \lambda \sum_j x_{jj} + \sum_i\chi_i\left(\sum_{j} x_{ij} = 1\right) + \sum_{i,j} \chi\left(x_{ij} \leq x_{jj}\right)
+%$$
+%where $\chi(b)=-\infty$ if $b$ is not True and 0 otherwise.  By exponentiating, we can think of this as an unnormalized probability distribution.
